@@ -15,11 +15,6 @@ const userSchema = new Schema({
     age: {
         type: Number
     },
-
-
-
-
-
     login_token: {
         type: String,
         default: null
