@@ -21,22 +21,22 @@ exports.getAllUser = async (req, res) => {
 
 exports.addUser = async (req, res) => {
 
-        const { userName, email, password, age } = req.body
+    const { userName, email, password, age } = req.body
 
-        const newuser = {
-            userName,
-            email,
-            password,
-            age
-        }
+    const newuser = {
+        userName,
+        email,
+        password,
+        age
+    }
 
-        const finaluser = await User.create(newuser);
+    const finaluser = await User.create(newuser);
 
-        res.status(200).json({
-            success: true,
-            data: finaluser,
-            message: "add user not successfully"
-        })
+    res.status(200).json({
+        success: true,
+        data: finaluser,
+        message: "add user not successfully"
+    })
 }
 
 exports.updateUser = async (req, res) => {
@@ -51,14 +51,14 @@ exports.updateUser = async (req, res) => {
 
     const upadteuser = await findUser.save()
 
-        res.status(200).json({
-            success: true,
-            data: upadteuser,
-            message: "add user not successfully"
-        })
+    res.status(200).json({
+        success: true,
+        data: upadteuser,
+        message: "add user not successfully"
+    })
 }
 
-exports.deleteUser =async (req,res) => {
+exports.deleteUser = async (req, res) => {
     const { id } = req.params
 
     const findUser = await User.findById(id);

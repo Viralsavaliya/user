@@ -7,6 +7,8 @@ exports.register = async (req, res) => {
     try {
         const { userName, email, password, age } = req.body
 
+
+
         const hashpw = await bcrypt.hash(password, 10)
         const newuser = {
             userName,
@@ -59,6 +61,10 @@ exports.login = async (req, res) => {
             expiresIn: '24h'
         })
 
+        finduser.login_token = token
+
+        await finduser.save()
+
 
 
         res.status(200).json({
@@ -101,9 +107,10 @@ exports.sendEmail = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-        const error = new error('User not found');
-        error.statuscode = 404;
-        throw error
+        res.status(200).json({
+            success: false,
+            message: "user not found"
+        })
     }
 
     const userid = user.id
@@ -124,6 +131,12 @@ exports.sendEmail = async (req, res) => {
         html: `<a href="http://localhost:3000/reset-password?token=${token}">Click here reset password  </a>`
 
     })
+
+
+    user.token = token;
+
+    await user.save();
+
     console.log(token)
     return res.status(200).json({
         success: true,
@@ -138,6 +151,9 @@ exports.sendEmail = async (req, res) => {
 exports.resetpassword = async (req, res) => {
 
     try {
+
+
+
         const { password, token } = req.body
 
 
@@ -162,25 +178,35 @@ exports.resetpassword = async (req, res) => {
             throw err
         }
 
-        const hashpassword = await bcrypt.hash(password, 10)
+        const usertoken = user.token;
 
-        user.password = hashpassword;
+        if (usertoken !== null) {
+            const hashpassword = await bcrypt.hash(password, 10)
+            user.password = hashpassword;
+            user.token = null
+            const upadte = await user.save();
 
-        const upadte = await user.save();
-
-        console.log(jwt.destroy(token))
 
 
-        res.status(200).json({
-            success: true,
-            data: upadte,
-            message: "upadte password successfully"
-        })
+            res.status(200).json({
+                success: true,
+                data: upadte,
+                message: "upadte password successfully"
+            })
+        }
+        else {
+            res.status(400).json({
+                success: false,
+                message: "token not found"
+            })
+        }
+
 
     } catch (error) {
-        const err = new Error('token allready use')
-        err.statusCode = 422
-        throw err
+        res.status(400).json({
+            success: false,
+            message: "user not found"
+        })
     }
 
 }

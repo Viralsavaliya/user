@@ -7,6 +7,7 @@ const routes = require('./routes/index')
 // const cookieParser = require('cookie-parser');
 // const session = require('express-session')
 
+
 app.use(express.json({ limit: "50mb" }))
 
 // app.use(session({

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-// const randToken = require('rand-token')
+
 
 const userSchema = new Schema({
     userName: {
@@ -14,6 +14,14 @@ const userSchema = new Schema({
     },
     age: {
         type: Number
+    },
+    login_token: {
+        type: String,
+        default: null
+    },
+    token: {
+        type: String,
+        default: null
     }
 }, {
     timestamps: true
